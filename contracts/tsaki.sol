@@ -25,24 +25,6 @@ contract Tsaki is ERC20Capped, Ownable {
 	    _mint(to, amount);
     }
 
-   // Owner acessibility to freeze all token activity if there is an exploit or bug
-    function pause() external onlyOwner {
-	    _pause();
-    }
-
-    function unpause() external onlyOwner {
-	    _unpause();
-    }
-
-    function _update(address to, address from, uint256 value) {
-	    internal
-	    override(ERC20Capped, ERC20Pausible) 
-	    {
-		    super._update(to, from, value);
-	    }
-
-    }
-
 	
    // Allows holder to burn 100 tokens / burns to dead wallet address
    error BalanceTooLow(uint256 balance, uint256 required);
