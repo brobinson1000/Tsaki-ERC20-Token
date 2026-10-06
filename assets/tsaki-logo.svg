@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 864" width="1536" height="864" role="img" aria-label="TSAKI token logo: a purple coin with a T built from Ethereum-style facets">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#A56BE0"/>
+      <stop offset="0.45" stop-color="#F6CDB5"/>
+      <stop offset="0.75" stop-color="#FCE5B6"/>
+      <stop offset="1" stop-color="#C9D6F2"/>
+    </linearGradient>
+    <linearGradient id="edge" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#9B72FF"/>
+      <stop offset="1" stop-color="#1F1566"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.55"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1536" height="864" fill="url(#bg)"/>
+  <ellipse cx="770" cy="440" rx="330" ry="330" fill="url(#glow)"/>
+
+  <!-- Coin (tilted) -->
+  <g transform="translate(750 430) rotate(-22) scale(0.82 1)">
+    <!-- thickness / edge -->
+    <circle cx="44" cy="0" r="250" fill="#1F1566" stroke="#1B1250" stroke-width="2"/>
+    <circle cx="36" cy="0" r="250" fill="url(#edge)"/>
+    <circle cx="28" cy="0" r="250" fill="#8A5CFF"/>
+    <circle cx="20" cy="0" r="250" fill="#7A4BF0"/>
+    <circle cx="12" cy="0" r="250" fill="#6B3DE0"/>
+    <!-- face -->
+    <circle cx="0" cy="0" r="250" fill="#B9A2FF" stroke="#2A1A6E" stroke-width="2"/>
+    <circle cx="-10" cy="-8" r="206" fill="#6D2CF2"/>
+    <circle cx="0" cy="0" r="204" fill="#E9E6FF" stroke="#2A1A6E" stroke-width="1.5"/>
+
+    <!-- T mark with Ethereum-style facets -->
+    <g stroke="#E9E6FF" stroke-width="3" stroke-linejoin="round">
+      <!-- top bar -->
+      <polygon points="-125,-120 0,-120 0,-78 -98,-78" fill="#000"/>
+      <polygon points="0,-120 125,-120 98,-78 0,-78" fill="#2B2B35"/>
+      <!-- stem -->
+      <polygon points="-36,-68 0,-68 0,34 -36,6" fill="#000"/>
+      <polygon points="0,-68 36,-68 36,6 0,34" fill="#2B2B35"/>
+      <!-- lower diamond facets -->
+      <polygon points="-36,18 0,46 0,112" fill="#4A1FC2"/>
+      <polygon points="36,18 0,46 0,112" fill="#6D2CF2"/>
+    </g>
+  </g>
+
+  <!-- Sparkles -->
+  <g>
+    <path d="M985 200 Q990 255 1035 262 Q990 270 985 330 Q980 270 935 262 Q980 255 985 200 Z" fill="#FFD98E"/>
+    <path d="M510 570 Q514 608 548 616 Q514 622 510 662 Q506 622 470 616 Q506 608 510 570 Z" fill="#FF9F7F"/>
+    <path d="M1180 600 Q1182 618 1198 622 Q1182 626 1180 644 Q1178 626 1162 622 Q1178 618 1180 600 Z" fill="#FFFFFF" opacity="0.8"/>
+  </g>
+</svg>
