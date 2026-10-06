@@ -3,8 +3,10 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/access/Pausable.sol";
+
+
 
 contract Tsaki is ERC20Capped, Ownable {
     uint256 public constant MIN_BALANCE_FOR_BURN = 100 * 10**18;
@@ -41,13 +43,18 @@ contract Tsaki is ERC20Capped, Ownable {
 
     }
 
-
+	
+   // Allows holder to burn 100 tokens / burns to dead wallet address
+   error BalanceTooLow(uint256 balance, uint256 required);
+   event HolderBurn(address indexed holder, uint256 amount);
 
     function holderBurn(uint256 amount) public {
-        require(
-            balanceOf(msg.sender) > MIN_BALANCE_FOR_BURN,
-            "Balance must be above 100 tokens"
-        );
-        _burn(msg.sender, amount);
-    }
-}
+	    uint256 balance = balanceOf(msg.sender);
+	    
+	    if (balance <= MIN_BALANCE_FOR_BURN) {
+		revert BalanceTooLow(balance, MIN_BALANCE_FOR_BURN);
+            }
+
+	    _burn(msg.sender, amount);
+	    emit HolderBurn(msg.sender, amount);
+}	
