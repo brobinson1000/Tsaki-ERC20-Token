@@ -6,6 +6,8 @@
     "@types/node": "^22.20.2",
     "dotenv": "^17.4.2",
     "hardhat": "^3.16.0",
+    "prettier": "^3.9.9",
+    "prettier-plugin-solidity": "^2.4.1",
     "typescript": "~6.0.3"
   },
   "name": "tempura-token",

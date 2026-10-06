@@ -2,41 +2,49 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Capped.sol";
-import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Pausable.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Permit.sol";
+import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/Nonces.sol";
 
+contract Tsaki is ERC20, ERC20Permit, ERC20Votes, Ownable {
+    uint256 public constant MINIMUM_TIME_BETWEEN_MINTS = 365 days;
+    uint256 public constant MINT_CAP_BPS = 200; // 2% of supply, in basis points
 
+    uint256 public mintingAllowedAfter;
 
-contract Tsaki is ERC20Capped, Ownable {
-    uint256 public constant MIN_BALANCE_FOR_BURN = 100 * 10**18;
+    error MintTooSoon(uint256 allowedAfter);
+    error MintCapExceeded(uint256 amount, uint256 maxAllowed);
+    error MintingStartInPast();
 
-    constructor(uint256 initialSupply)
-        ERC20("Tsaki", "TSKI")
-        ERC20Capped(1_000_000 * 10**18)
-	Ownable(msg.sender) // Deploy -> becomes owner
-    {
+    // owner = the timelock address (deploy the timelock first)
+    constructor(
+        uint256 initialSupply,
+        address timelock,
+        uint256 firstMintAfter
+    ) ERC20("Tsaki", "TSKI") ERC20Permit("Tsaki") Ownable(timelock) {
+        if (firstMintAfter < block.timestamp) revert MintingStartInPast();
+        mintingAllowedAfter = firstMintAfter;
         _mint(msg.sender, initialSupply);
     }
 
-   
-   // Owner acessibility to mint new tokens 
     function mint(address to, uint256 amount) external onlyOwner {
-	    _mint(to, amount);
+        if (block.timestamp < mintingAllowedAfter) {
+            revert MintTooSoon(mintingAllowedAfter);
+        }
+        mintingAllowedAfter = block.timestamp + MINIMUM_TIME_BETWEEN_MINTS;
+
+        uint256 maxAllowed = (totalSupply() * MINT_CAP_BPS) / 10_000;
+        if (amount > maxAllowed) revert MintCapExceeded(amount, maxAllowed);
+
+        _mint(to, amount);
     }
 
-	
-   // Allows holder to burn 100 tokens / burns to dead wallet address
-   error BalanceTooLow(uint256 balance, uint256 required);
-   event HolderBurn(address indexed holder, uint256 amount);
+    function _update(address from, address to, uint256 value) internal override(ERC20, ERC20Votes) {
+        super._update(from, to, value);
+    }
 
-    function holderBurn(uint256 amount) external {
-	    uint256 balance = balanceOf(msg.sender);
-	    
-	    if (balance <= MIN_BALANCE_FOR_BURN) {
-		revert BalanceTooLow(balance, MIN_BALANCE_FOR_BURN);
-            }
-
-	    _burn(msg.sender, amount);
-	    emit HolderBurn(msg.sender, amount);
-}	
+    function nonces(address owner) public view override(ERC20Permit, Nonces) returns (uint256) {
+        return super.nonces(owner);
+    }
+}
