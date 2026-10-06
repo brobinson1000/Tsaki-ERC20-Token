@@ -48,7 +48,7 @@ contract Tsaki is ERC20Capped, Ownable {
    error BalanceTooLow(uint256 balance, uint256 required);
    event HolderBurn(address indexed holder, uint256 amount);
 
-    function holderBurn(uint256 amount) public {
+    function holderBurn(uint256 amount) external {
 	    uint256 balance = balanceOf(msg.sender);
 	    
 	    if (balance <= MIN_BALANCE_FOR_BURN) {
