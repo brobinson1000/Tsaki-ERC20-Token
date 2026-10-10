@@ -1,4 +1,25 @@
 // SPDX-License-Identifier: MIT
+
+/**
+ * @title TsakiGovernor
+ * @notice On-chain governance for the TSAKI token.
+ *
+ * How it works:
+ *  - Voting power comes from delegated TSAKI (1 token = 1 vote). Holders must
+ *    call delegate() on the token before their balance counts.
+ *  - Proposing: an address needs at least 5,000,000 TSAKI of voting power
+ *    (5% of a 100M supply) to create a proposal.
+ *  - Voting: opens 1 day after a proposal is created and stays open for 1 day.
+ *    Anyone with delegated voting power can vote For, Against, or Abstain.
+ *  - Quorum: For + Abstain votes must total at least 5% of total supply,
+ *    otherwise the proposal is defeated.
+ *  - Passing: the proposal needs quorum and more For votes than Against votes.
+ *  - Execution: passed proposals are queued in the TsakiTimelock, wait out its
+ *    delay, and can then be executed by anyone.
+ *
+ * Delay and period values are measured in blocks (about 12 seconds each).
+ */
+
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/governance/Governor.sol";
@@ -24,10 +45,10 @@ contract TsakiGovernor is
         GovernorSettings(
             7200, // voting delay: 1 day before voting opens
             7200, // voting period: 1 day similar to election day
-            5_000_000e18 // Must have 5% of TSKI supply to create a proposal
+            5_000_000e18 
         )
         GovernorVotes(_token)
-        GovernorVotesQuorumFraction(5) // 5% of total supply must participate
+        GovernorVotesQuorumFraction(5)
         GovernorTimelockControl(_timelock)
     {}
 
